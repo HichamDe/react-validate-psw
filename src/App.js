@@ -11,14 +11,15 @@ function App() {
     e.preventDefault();
     if (!(inp1 == inp2)) {
       setErrorMessage('Enter the same password !')
-    } else if (validator.isStrongPassword(inp1, {
-      minLength: 8, minLowercase: 1,
-      minUppercase: 1, minNumbers: 1, minSymbols: 1
-    })) {
-      setErrorMessage("")
-      alert("Strong psw")
-    }else{
-      setErrorMessage('too weak')
+    } else {
+      if (validator.isStrongPassword(inp1, {
+        minLength: 8, minLowercase: 1,
+        minUppercase: 1, minNumbers: 1, minSymbols: 1
+      })) {
+        alert("Strong psw")
+      } else {
+        setErrorMessage('Password Should Contain  in length of 8 at least 1 Symbol, 1 UpperCase , 1 LowerCase and 1 Number')
+      }
     }
 
   }
