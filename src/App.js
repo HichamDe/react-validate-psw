@@ -1,28 +1,37 @@
-import { useState } from "react";
-import validator from 'validator'
+import { useEffect, useState } from "react";
 
 
 function App() {
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [contraints, setContraints] = useState("");
   const [inp1, setInp1] = useState("");
   const [inp2, setInp2] = useState("");
 
+  // this function will check if a string contains a set of
+  // rules for strong password standards
+  function checkMissingContraints(password) {
+    setContraints({
+      length: password.length > 8,
+      lowercase: /.*[a-z]/g.test(password),
+      uppercase: /.*[A-Z]/g.test(password),
+      number: /.*[0-9]/g.test(password),
+      symbol: /.*[!@#\$%\^\&*\)\(+=._-]/g.test(password)
+    });
+  }
+
+  // Executed when all the required inputs are filled up
   function submit(e) {
     e.preventDefault();
     if (!(inp1 == inp2)) {
-      setErrorMessage('Enter the same password !')
+      alert('Enter the same password !');
     } else {
-      if (validator.isStrongPassword(inp1, {
-        minLength: 8, minLowercase: 1,
-        minUppercase: 1, minNumbers: 1, minSymbols: 1
-      })) {
-        alert("Strong psw")
-      } else {
-        setErrorMessage('Password Should Contain  in length of 8 at least 1 Symbol, 1 UpperCase , 1 LowerCase and 1 Number')
-      }
+      alert("Strong Password")
     }
 
   }
+
+  useEffect(() => {
+    checkMissingContraints(inp1);
+  }, [inp1]);
 
   return (
     <div className="flex justify-center items-center h-[100vh]">
@@ -33,7 +42,7 @@ function App() {
 
           <div>
             <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your password</label>
-            <input onChange={(e) => setInp1(e.target.value)} type="password" name="password" id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required />
+            <input onChange={(e) => { setInp1(e.target.value) }} type="password" name="password" id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required />
           </div>
           <div>
             <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirm password</label>
@@ -49,7 +58,15 @@ function App() {
             </div>
             <a href="#" class="ms-auto text-sm text-blue-700 hover:underline dark:text-blue-500">Lost Password?</a>
           </div>
-          <p className="text-red-500">{errorMessage || ""}</p>
+          <section className="">
+
+            {!contraints.length ? <p className="text-red-500">Greater Then 8 Charachters</p> : ""}
+            {!contraints.uppercase ? <p className="text-red-500">At Least 1 UpperCase</p> : ""}
+            {!contraints.lowercase ? <p className="text-red-500"> At Least 1 LowerCase</p> : ""}
+            {!contraints.number ? <p className="text-red-500">At Least 1 Number</p> : ""}
+            {!contraints.symbol ? <p className="text-red-500">At Least 1 Symbol</p> : ""}
+
+          </section>
           <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Login to your account</button>
           <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
             Not registered? <a href="#" class="text-blue-700 hover:underline dark:text-blue-500">Create account</a>
